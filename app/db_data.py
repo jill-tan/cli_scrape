@@ -1,4 +1,4 @@
-from database import get_db
+from database import Session
 from models import Transaction
 from sqlalchemy import or_
 from contextlib import contextmanager
@@ -8,12 +8,12 @@ class DBData:
 
     @contextmanager
     def session_scope(self):
-        db_gen = get_db()
-        db = next(db_gen)
+        db = Session()
         try:
             yield db
-        finally:
+        except:
             db.rollback()
+        finally:
             db.close()
 
     def transaction_count(self):
